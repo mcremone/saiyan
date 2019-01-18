@@ -44,8 +44,8 @@ class ObjectsArray(awkward.Methods):
         
         if 'p4' in argkeys:
             p4 = items['p4']
-            if not isinstance(p4,uproot_methods.TLorentzVectorArray):
-                p4 = uproot_methods.TLorentzVectorArray.from_cartesian(p4[:,0],p4[:,1],
+            if not isinstance(p4,uproot_methods.TLorentzVector):
+                p4 = uproot_methods.TLorentzVector.from_cartesian(p4[:,0],p4[:,1],
                                                                        p4[:,2],p4[:,3])
             fast_pt = _fast_pt(p4)
             fast_eta = _fast_eta(p4)
@@ -53,7 +53,7 @@ class ObjectsArray(awkward.Methods):
             fast_mass = _fast_mass(p4)
 
         elif 'pt' in argkeys and 'eta' in argkeys and 'phi' in argkeys and 'mass' in argkeys:
-            p4 = uproot_methods.TLorentzVectorArray.from_ptetaphim(items['pt'],items['eta'],
+            p4 = uproot_methods.TLorentzVector.from_ptetaphim(items['pt'],items['eta'],
                                                                    items['phi'],items['mass'])
             fast_pt = items['pt']
             fast_eta = items['eta']
@@ -65,7 +65,7 @@ class ObjectsArray(awkward.Methods):
             del items['mass']
 
         elif 'pt' in argkeys and 'eta' in argkeys and 'phi' in argkeys and 'energy' in argkeys:
-            p4 = uproot_methods.TLorentzVectorArray.from_ptetaphi(items['pt'],items['eta'],
+            p4 = uproot_methods.TLorentzVector.from_ptetaphi(items['pt'],items['eta'],
                                                                   items['phi'],items['energy'])
             fast_pt = items['pt']
             fast_eta = items['eta']
@@ -77,7 +77,7 @@ class ObjectsArray(awkward.Methods):
             del items['energy']
 
         elif 'px' in argkeys and 'py' in argkeys and 'pz' in argkeys and 'mass' in argkeys:
-            p4 = uproot_methods.TLorentzVectorArray.from_xyzm(items['px'],items['py'],
+            p4 = uproot_methods.TLorentzVector.from_xyzm(items['px'],items['py'],
                                                               items['pz'],items['mass'])
             fast_pt = _fast_pt(p4)
             fast_eta = _fast_eta(p4)
@@ -89,7 +89,7 @@ class ObjectsArray(awkward.Methods):
             del items['mass']
 
         elif 'pt' in argkeys and 'phi' in argkeys and 'pz' in argkeys and 'energy' in argkeys:
-            p4 = uproot_methods.TLorentzVectorArray.from_cylindrical(items['pt'],items['phi'],
+            p4 = uproot_methods.TLorentzVector.from_cylindrical(items['pt'],items['phi'],
                                                                      items['pz'],items['energy'])
             fast_pt = items['pt']
             fast_eta = _fast_eta(p4)
@@ -101,7 +101,7 @@ class ObjectsArray(awkward.Methods):
             del items['energy']
 
         elif 'px' in argkeys and 'py' in argkeys and 'pz' in argkeys and 'energy' in argkeys:
-            p4 = uproot_methods.TLorentzVectorArray.from_cartesian(items['px'],items['py'],
+            p4 = uproot_methods.TLorentzVector.from_cartesian(items['px'],items['py'],
                                                                    items['pz'],items['energy'])
             fast_pt = _fast_pt(p4)
             fast_eta = _fast_eta(p4)
@@ -113,7 +113,7 @@ class ObjectsArray(awkward.Methods):
             del items['energy']
 
         elif 'p' in argkeys and 'theta' in argkeys and 'phi' in argkeys and 'energy' in argkeys:
-            p4 = uproot_methods.TLorentzVectorArray.from_spherical(items['p'],items['theta'],
+            p4 = uproot_methods.TLorentzVector.from_spherical(items['p'],items['theta'],
                                                                    items['phi'],items['energy'])
             fast_pt = _fast_pt(p4)
             fast_eta = _fast_eta(p4)
@@ -125,7 +125,7 @@ class ObjectsArray(awkward.Methods):
             del items['energy']
 
         elif 'p3' in argkeys and 'energy' in argkeys:
-            p4 = uproot_methods.TLorentzVectorArray.from_p3(items['p3'],items['energy'])
+            p4 = uproot_methods.TLorentzVector.from_p3(items['p3'],items['energy'])
             fast_pt = _fast_pt(p4)
             fast_eta = _fast_eta(p4)
             fast_phi = _fast_phi(p4)

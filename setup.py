@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="saiyan",
-    version="0.0.1",
+    version="0.0.3",
     author="Matteo Cremonesi",
     author_email="matteoc@fnal.gov",
     description="Sophisticated Algorithms Implemented to make Your Analysis Nice",

@@ -1,6 +1,5 @@
 import uproot, uproot_methods
-import saiyan
-from saiyan import *
+from ..saiyan.arrays.Array import *
 
 
 f = uproot.open("nano_5.root")

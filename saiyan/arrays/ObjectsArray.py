@@ -37,28 +37,16 @@ class ObjectsArray(awkward.Methods):
         argkeys = items.keys()
         
         p4 = None
-        fast_pt = None
-        fast_eta = None
-        fast_phi = None
-        fast_mass = None
         
         if 'p4' in argkeys:
             p4 = items['p4']
             if not isinstance(p4,uproot_methods.TLorentzVector):
                 p4 = uproot_methods.TLorentzVector.from_cartesian(p4[:,0],p4[:,1],
                                                                        p4[:,2],p4[:,3])
-            fast_pt = _fast_pt(p4)
-            fast_eta = _fast_eta(p4)
-            fast_phi = _fast_phi(p4)
-            fast_mass = _fast_mass(p4)
 
         elif 'pt' in argkeys and 'eta' in argkeys and 'phi' in argkeys and 'mass' in argkeys:
             p4 = uproot_methods.TLorentzVector.from_ptetaphim(items['pt'],items['eta'],
                                                                    items['phi'],items['mass'])
-            fast_pt = items['pt']
-            fast_eta = items['eta']
-            fast_phi = items['phi']
-            fast_mass = items['mass']
             del items['pt']
             del items['eta']
             del items['phi']
@@ -67,10 +55,6 @@ class ObjectsArray(awkward.Methods):
         elif 'pt' in argkeys and 'eta' in argkeys and 'phi' in argkeys and 'energy' in argkeys:
             p4 = uproot_methods.TLorentzVector.from_ptetaphi(items['pt'],items['eta'],
                                                                   items['phi'],items['energy'])
-            fast_pt = items['pt']
-            fast_eta = items['eta']
-            fast_phi = items['phi']
-            fast_mass = _fast_mass(p4)
             del items['pt']
             del items['eta']
             del items['phi']
@@ -79,10 +63,6 @@ class ObjectsArray(awkward.Methods):
         elif 'px' in argkeys and 'py' in argkeys and 'pz' in argkeys and 'mass' in argkeys:
             p4 = uproot_methods.TLorentzVector.from_xyzm(items['px'],items['py'],
                                                               items['pz'],items['mass'])
-            fast_pt = _fast_pt(p4)
-            fast_eta = _fast_eta(p4)
-            fast_phi = _fast_phi(p4)
-            fast_mass = items['mass']
             del items['px']
             del items['py']
             del items['pz']
@@ -91,10 +71,6 @@ class ObjectsArray(awkward.Methods):
         elif 'pt' in argkeys and 'phi' in argkeys and 'pz' in argkeys and 'energy' in argkeys:
             p4 = uproot_methods.TLorentzVector.from_cylindrical(items['pt'],items['phi'],
                                                                      items['pz'],items['energy'])
-            fast_pt = items['pt']
-            fast_eta = _fast_eta(p4)
-            fast_phi = items['phi']
-            fast_mass = _fast_mass(p4)
             del items['pt']
             del items['phi']
             del items['pz']
@@ -103,10 +79,6 @@ class ObjectsArray(awkward.Methods):
         elif 'px' in argkeys and 'py' in argkeys and 'pz' in argkeys and 'energy' in argkeys:
             p4 = uproot_methods.TLorentzVector.from_cartesian(items['px'],items['py'],
                                                                    items['pz'],items['energy'])
-            fast_pt = _fast_pt(p4)
-            fast_eta = _fast_eta(p4)
-            fast_phi = _fast_phi(p4)
-            fast_mass = _fast_mass(p4)
             del items['px']
             del items['py']
             del items['pz']
@@ -115,10 +87,6 @@ class ObjectsArray(awkward.Methods):
         elif 'p' in argkeys and 'theta' in argkeys and 'phi' in argkeys and 'energy' in argkeys:
             p4 = uproot_methods.TLorentzVector.from_spherical(items['p'],items['theta'],
                                                                    items['phi'],items['energy'])
-            fast_pt = _fast_pt(p4)
-            fast_eta = _fast_eta(p4)
-            fast_phi = items['phi']
-            fast_mass = _fast_mass(p4)
             del items['p']
             del items['theta']
             del items['phi']
@@ -126,10 +94,6 @@ class ObjectsArray(awkward.Methods):
 
         elif 'p3' in argkeys and 'energy' in argkeys:
             p4 = uproot_methods.TLorentzVector.from_p3(items['p3'],items['energy'])
-            fast_pt = _fast_pt(p4)
-            fast_eta = _fast_eta(p4)
-            fast_phi = _fast_phi(p4)
-            fast_mass = _fast_mass(p4)
             del items['p3']
             del items['energy']
 
@@ -137,5 +101,8 @@ class ObjectsArray(awkward.Methods):
             raise Exception('No valid definition of four-momentum')
 
         self = p4
+        for arg in argkeys: self[arg] = items[arg]
 
-        
+
+    def __getattr__(self, name):
+        return self[name]

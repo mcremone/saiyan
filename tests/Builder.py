@@ -1,33 +1,39 @@
 import awkward
-import uproot_methods
+import uproot, uproot_methods
 
 class Dangerousness(object):
-    def __getattr__(self, name):
-        return self[name]
+    def __getattr__(self,what):
+        if what in self.columns:
+            return self[what]
+        thewhat = getattr(super(awkward.array.objects.JaggedArrayMethods, self),what)
+        return thewhat
     
 class Methods(object):
-    
+        
     def match(self, cands, value):
-        array1 = uproot_methods.TLorentzVectorArray.from_ptetaphim(self.pt,self.eta,self.phi,self.mass)
-        array2 = uproot_methods.TLorentzVectorArray.from_ptetaphim(cands.pt,cands.eta,cands.phi,cands.mass)
-        combinations = array1.cross(array2, nested=True)
-        mask = (combinations.i0.delta_r(combinations.i1) <value)
+        if isinstance(self, awkward.JaggedArray):        
+            combinations = self.cross(cands, nested=True)
+            mask = (combinations.i0.delta_r(combinations.i1) <value)
+        else:
+            mask = self.delta_r(cands)<value
         return mask.any()
     
     def closest(self, cands):
-        array1 = uproot_methods.TLorentzVectorArray.from_ptetaphim(self.pt,self.eta,self.phi,self.mass)
-        array2 = uproot_methods.TLorentzVectorArray.from_ptetaphim(cands.pt,cands.eta,cands.phi,cands.mass)
-        combinations = array1.cross(array2, nested=True)
-        if ((~(combinations.i0.eta ==0).flatten().flatten().all())|(~(combinations.i1.eta ==0).flatten().flatten().all()) ):
-            criterium = combinations.i0.delta_phi(combinations.i1)
+        if isinstance(self, awkward.JaggedArray):
+            combinations = self.cross(cands, nested=True)
+            if ((~(combinations.i0.eta ==0).flatten().flatten().all())|(~(combinations.i1.eta ==0).flatten().flatten().all()) ):
+                criterium = combinations.i0.delta_phi(combinations.i1)
+            else:
+                criterium =combinations.i0.delta_r(combinations.i1)
         else:
-            criterium =combinations.i0.delta_r(combinations.i1)
-        index_of_closest = criterium.argmin()
-        return combinations.i1[index_of_closest]
+            if ((~(self.eta ==0).flatten().flatten().all())|(~(cands.eta ==0).flatten().flatten().all()) ):
+            	criterium =self.delta_phi(cands)
+            else:
+                criterium =self.delta_r(cands)
+        return cands[criterium.argmin()]
         
 
 def Initialize(items):
-#        items = kwargs
     argkeys = items.keys()
     p4 = None
     if 'p4' in argkeys:
@@ -95,14 +101,24 @@ def Initialize(items):
     out = p4
     for name, value in items.items():
         out[name] = value
-
     if isinstance(out, awkward.JaggedArray):
-        out.content.__class__ = type("Object", (Dangerousness, Methods, out.content.__class__), {})
-        out.__class__ = type("Collection", (Dangerousness, Methods, out.__class__), {})
+        out.content.__class__ = type("Object", (Dangerousness,
+                                                Methods,
+                                                out.content.__class__,
+                                                uproot_methods.classes.TLorentzVector.ArrayMethods), {})
+        out.__class__ = type("Collection", (Dangerousness,
+                                            Methods,
+                                            out.__class__,
+                                            uproot_methods.classes.TLorentzVector.ArrayMethods), {})
     else:
-        out.__class__ = type("Object", (Dangerousness, Methods, out.__class__), {})
+        out.__class__ = type("Object", (Dangerousness,
+                                        Methods,
+                                        out.__class__,
+                                        uproot_methods.classes.TLorentzVector.ArrayMethods), {})
 
     return out
+
+
 
 
 

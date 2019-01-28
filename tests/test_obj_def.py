@@ -99,7 +99,7 @@ twoM = (e_nloose==0)&(mu_nloose==2)&(tau_nloose==0)&(pho_nloose==0)
 twoE = (e_nloose==2)&(mu_nloose==0)&(tau_nloose==0)&(pho_nloose==0)
 oneA = (e_nloose==0)&(mu_nloose==0)&(tau_nloose==0)&(pho_nloose==1)
 
-sr = (j[j.isclean][zeroL&skinny,0].pt>100)&(met[zeroL&skinny].pt>200)&(met[zeroL&skinny].delta_phi(met[zeroL&skinny].closest(j[zeroL&skinny]))>0.5)
+sr = (j[j.isclean][zeroL&skinny,0].pt>100)&(met[zeroL&skinny].pt>200)&(met[zeroL&skinny].delta_phi(met[zeroL&skinny].closest(j[j.isclean][zeroL&skinny]))>0.5)
 #sr = (j[j.isclean][skinny&zeroL,0].pt>100)
 #print(e[e.isloose][e_nloose==1])
 #print(met._hasjagged())

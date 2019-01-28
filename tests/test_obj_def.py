@@ -42,7 +42,7 @@ tau = Initialize({'pt':tree.array('Tau_pt'),
                   'decayModeNew':tree.array('Tau_idDecayModeNewDMs'),
                   'id':tree.array('Tau_idMVAnew')})
 tau['isloose']=(tau.counts>0)&(tau.pt>18)&(abs(tau.eta)<2.3)&(tau.decayMode)&((tau.id&2)!=0)
-tau_ntot=t.counts
+tau_ntot=tau.counts
 tau_nloose=tau[tau.isloose].counts
 
 pho = Initialize({'pt':tree.array('Photon_pt'),
@@ -82,15 +82,27 @@ met = Initialize({'pt':tree.array("MET_pt"),
                   'phi':tree.array("MET_phi"),
                   'mass':0})
 
-diele = e.distincts().i0+e.distincts().i1
-dimu = mu.distincts().i0+mu.distincts().i1
-uwm = met+mu
-uwe = met+e
+diele = e[e.isloose].distincts().i0+e[e.isloose].distincts().i1
+dimu = mu[mu.isloose].distincts().i0+mu[mu.isloose].distincts().i1
+uwm = met+mu[mu.isloose]
+uwe = met+e[e.isloose]
 uzmm = met+dimu
 uzee = met+diele
-upho = met+pho
+upho = met+pho[pho.isloose]
 
+skinny = (j_nclean>0)
+loose = (fj_nclean>0)
+zeroL = (e_nloose==0)&(mu_nloose==0)&(tau_nloose==0)&(pho_nloose==0)
+oneM = (e_nloose==0)&(mu_nloose==1)&(tau_nloose==0)&(pho_nloose==0)
+oneE = (e_nloose==1)&(mu_nloose==0)&(tau_nloose==0)&(pho_nloose==0)
+twoM = (e_nloose==0)&(mu_nloose==2)&(tau_nloose==0)&(pho_nloose==0)
+twoE = (e_nloose==2)&(mu_nloose==0)&(tau_nloose==0)&(pho_nloose==0)
+oneA = (e_nloose==0)&(mu_nloose==0)&(tau_nloose==0)&(pho_nloose==1)
+
+sr = (j[j.isclean][zeroL&skinny,0].pt>100)&(met[zeroL&skinny].pt>200)
+#sr = (j[j.isclean][skinny&zeroL,0].pt>100)
 #print(e[e.isloose][e_nloose==1])
 #print(met._hasjagged())
 #print(diele[e_ntot==1].pt>0)
-print(uwm[mu.counts==1].pt)
+#print(uwm[mu.counts==1].pt)
+print(sr)

@@ -95,12 +95,15 @@ def Initialize(items):
         del items['p3']
         del items['energy']
 
+    try:
+        p4
+    except NameError:
+        out = awkward.Table()
     else:
-        raise Exception('No valid definition of four-momentum')
-
-    out = p4
+        out = p4
     for name, value in items.items():
         out[name] = value
+
     if isinstance(out, awkward.JaggedArray):
         out.content.__class__ = type("Object", (Dangerousness,
                                                 Methods,
@@ -110,12 +113,17 @@ def Initialize(items):
                                             Methods,
                                             out.__class__,
                                             uproot_methods.classes.TLorentzVector.ArrayMethods), {})
-    else:
-        out.__class__ = type("Object", (Dangerousness,
-                                        Methods,
-                                        out.__class__,
-                                        uproot_methods.classes.TLorentzVector.ArrayMethods), {})
-
+    else:# p4 is not None and not isinstance(out, awkward.JaggedArray):
+        try:
+            p4
+        except NameError:
+            out.__class__ = type("Event", (Dangerousness,
+                                           out.__class__), {})
+        else:
+            out.__class__ = type("Object", (Dangerousness,
+                                            Methods,
+                                            out.__class__,
+                                            uproot_methods.classes.TLorentzVector.ArrayMethods), {})
     return out
 
 

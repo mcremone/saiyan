@@ -1,5 +1,7 @@
-import uproot, uproot_methods
+from physt import histogram, binnings, h1, h2, h3
 import numpy as np
+import matplotlib.pyplot as plt
+import uproot, uproot_methods
 from Builder import Initialize
 
 file = uproot.open("nano_5.root")
@@ -8,28 +10,6 @@ tree = file["Events"]
 ####
 # Object Initialization
 ###
-
-'''
-met_trigger_paths = ["HLT_PFMET170_NoiseCleaned",
-            "HLT_PFMET170_HBHECleaned",
-            "HLT_PFMET170_JetIdCleaned",
-            "HLT_PFMET170_NotCleaned",
-            #"HLT_PFMET170_HBHE_BeamHaloCleaned",
-            #"HLT_PFMETNoMu120_NoiseCleaned_PFMHTNoMu120_IDTight",
-            #"HLT_PFMETNoMu110_NoiseCleaned_PFMHTNoMu110_IDTight",
-            #"HLT_PFMETNoMu90_NoiseCleaned_PFMHTNoMu90_IDTight",
-            "HLT_PFMETNoMu90_PFMHTNoMu90_IDTight",
-            "HLT_PFMETNoMu100_PFMHTNoMu100_IDTight",
-            "HLT_PFMETNoMu110_PFMHTNoMu110_IDTight",
-            "HLT_PFMETNoMu120_PFMHTNoMu120_IDTight"]
-met_trigger = {path:tree.array(path) for path in met_trigger_paths}
-
-event = Initialize({'isMET':np.prod([met_trigger[key] for key in met_trigger_paths], axis=0)
-                    'lhe':tree.array('thefuckinglheweight')})
-
-xsec = parse_xsec(cfgfile)[dataset_name]
-event["xsecweight"], event["scaleweight"], event["pdfweight"] = calculate_xsec_weights(len(Events), xsec, Events.lhe, lumi=1000.)
-'''
 
 e = Initialize({'pt':tree.array("Electron_pt"),
                 'eta':tree.array("Electron_eta"),
@@ -132,10 +112,13 @@ twoM = (e_nloose==0)&(mu_nloose==2)&(tau_nloose==0)&(pho_nloose==0)
 twoE = (e_nloose==2)&(mu_nloose==0)&(tau_nloose==0)&(pho_nloose==0)
 oneA = (e_nloose==0)&(mu_nloose==0)&(tau_nloose==0)&(pho_nloose==1)
 
-sr = (j_clean[zeroL&skinny,0].pt>100)&(met[zeroL&skinny].pt>200)&(met[zeroL&skinny].delta_phi(met[zeroL&skinny].closest(j_clean[zeroL&skinny]))>0.5)
+#sr = (j_clean[0].pt>100)&(met.pt>200)&(met.delta_phi(met.closest(j_clean))>0.5)
+#hist = histogram(met[zeroL&skinny&met[zeroL&skinny].pt>200].pt)
+#hist.plot(show_values=True)
 #sr = (j[j.isclean][skinny&zeroL,0].pt>100)
 #print(e[e.isloose][e_nloose==1])
 #print(met._hasjagged())
 #print(diele[e_ntot==1].pt>0)
 #print(uwm[mu.counts==1].pt)
-print(sr)
+print(met[skinny&zeroL&(met.pt>200)])#it works
+print(met[skinny&zeroL&(j[j.isclean][0].pt>10)])

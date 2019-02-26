@@ -1,5 +1,5 @@
 .. image:: docs/saiyan.png
-   :height: 18px
+   :height: 4px
    :alt: saiyan
 
 # saiyan

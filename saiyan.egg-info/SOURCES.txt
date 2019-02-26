@@ -1,7 +1,0 @@
-README.md
-setup.py
-saiyan/__init__.py
-saiyan.egg-info/PKG-INFO
-saiyan.egg-info/SOURCES.txt
-saiyan.egg-info/dependency_links.txt
-saiyan.egg-info/top_level.txt

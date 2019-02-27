@@ -36,7 +36,10 @@ e = Initialize({'pt':tree.array("Electron_pt"),
                 'eta':tree.array("Electron_eta"),
                 'phi':tree.array("Electron_phi"),
                 'mass':tree.array("Electron_mass"),
-                'iso':tree.array('Electron_pfRelIso03_all'),
+dz)<0.2)&(e.\
+          tight_id)&(e.iso<0.06)
+e_loose = e[e.isloose]
+e_tight = e[e.istight'iso':tree.array('Electron_pfRelIso03_all'),
                 'dxy':tree.array('Electron_dxy'),
                 'dz':tree.array('Electron_dz'),
                 'loose_id':tree.array('Electron_mvaSpring16GP_WP90'),

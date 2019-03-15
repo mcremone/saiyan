@@ -5,8 +5,6 @@ class Dangerousness(object):
     def __getattr__(self,what):
         if what in self.columns:
             return self[what]
-        thewhat = getattr(super(awkward.array.objects.JaggedArrayMethods, self),what)
-        return thewhat
     
 class Methods(object):
         
